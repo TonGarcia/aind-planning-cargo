@@ -158,8 +158,7 @@ class AirCargoProblem(Problem):
 
         #  init KB Prop with the received state
         kb = PropKB()
-        sentence = decode_state(state, self.state_map).pos_sentence()
-        kb.tell(sentence)
+        kb.tell(decode_state(state, self.state_map).pos_sentence())
 
         # search for possible actions
         possible_actions = []
@@ -172,13 +171,14 @@ class AirCargoProblem(Problem):
             for act_pre_condition_neg in action.precond_neg:
                 if act_pre_condition_neg in kb.clauses:
                     is_possible_action = False
+                    break  # No need to keep searching
 
             # if current action still probably possible,
             # so check if it is not missed at kb.clauses
             if is_possible_action:
                 for act_pre_condition_pos in action.precond_pos:
                     if act_pre_condition_pos not in kb.clauses:
-                        is_action_possible = False
+                        is_possible_action = False
                         break  # No need to keep searching
 
             # if it still a possible action, so it really is, so add it
@@ -265,6 +265,17 @@ class AirCargoProblem(Problem):
 
 
 def air_cargo_p1() -> AirCargoProblem:
+    """
+    Init(At(C1, SFO) ∧ At(C2, JFK)
+        ∧ At(P1, SFO) ∧ At(P2, JFK)
+        ∧ Cargo(C1) ∧ Cargo(C2)
+        ∧ Plane(P1) ∧ Plane(P2)
+        ∧ Airport(JFK) ∧ Airport(SFO))
+    Goal(At(C1, JFK) ∧ At(C2, SFO))
+
+    :return: AirCargoProblem
+    """
+
     cargos = ['C1', 'C2']
     planes = ['P1', 'P2']
     airports = ['JFK', 'SFO']
@@ -290,10 +301,66 @@ def air_cargo_p1() -> AirCargoProblem:
 
 
 def air_cargo_p2() -> AirCargoProblem:
-    # TODO implement Problem 2 definition
-    pass
+    """
+    Init(At(C1, SFO) ∧ At(C2, JFK) ∧ At(C3, ATL)
+        ∧ At(P1, SFO) ∧ At(P2, JFK) ∧ At(P3, ATL)
+        ∧ Cargo(C1) ∧ Cargo(C2) ∧ Cargo(C3)
+        ∧ Plane(P1) ∧ Plane(P2) ∧ Plane(P3)
+        ∧ Airport(JFK) ∧ Airport(SFO) ∧ Airport(ATL))
+    Goal(At(C1, JFK) ∧ At(C2, SFO) ∧ At(C3, SFO))
 
+    :return: AirCargoProblem
+    """
+
+    # Variables to build the syntax
+    cargos = ['C1', 'C2', 'C3']
+    planes = ['P1', 'P2', 'P3']
+    airports = ['JFK', 'SFO', 'ATL']
+
+    # POS Present in the init state expression
+    pos = [
+        expr('At(C1, SFO)'),
+        expr('At(C2, JFK)'),
+        expr('At(C3, ATL)'),
+        expr('At(P1, SFO)'),
+        expr('At(P2, JFK)'),
+        expr('At(P3, ATL)')
+    ]
+
+    # NEG: States not present in the init state expression
+    neg = [
+        expr('At(C1, JFK)'), expr('At(C1, ATL)'), expr('In(C1, P1)'), expr('In(C1, P2)'), expr('In(C1, P3)'),
+        expr('At(C2, SFO)'), expr('At(C2, ATL)'), expr('In(C2, P1)'), expr('In(C2, P2)'), expr('In(C2, P3)'),
+        expr('At(C3, SFO)'), expr('At(C3, JFK)'), expr('In(C3, P1)'), expr('In(C3, P2)'), expr('In(C3, P3)'),
+        expr('At(P1, JFK)'), expr('At(P1, ATL)'),
+        expr('At(P2, SFO)'), expr('At(P2, ATL)'),
+        expr('At(P3, JFK)'), expr('At(P3, SFO)')
+    ]
+
+    # Start/init FluentState
+    init_state = FluentState(pos, neg)
+
+    # Expected Final State/Result (Goal)
+    goal = [
+        expr('At(C1, JFK)'),
+        expr('At(C2, SFO)'),
+        expr('At(C3, SFO)')
+    ]
+
+    # DONE: implement Problem 2 definition
+    return AirCargoProblem(cargos, planes, airports, init_state, goal)
 
 def air_cargo_p3() -> AirCargoProblem:
+    """
+    Init(At(C1, SFO) ∧ At(C2, JFK) ∧ At(C3, ATL) ∧ At(C4, ORD)
+        ∧ At(P1, SFO) ∧ At(P2, JFK)
+        ∧ Cargo(C1) ∧ Cargo(C2) ∧ Cargo(C3) ∧ Cargo(C4)
+        ∧ Plane(P1) ∧ Plane(P2)
+        ∧ Airport(JFK) ∧ Airport(SFO) ∧ Airport(ATL) ∧ Airport(ORD))
+    Goal(At(C1, JFK) ∧ At(C3, JFK) ∧ At(C2, SFO) ∧ At(C4, SFO))
+
+    :return: AirCargoProblem
+    """
+
     # TODO implement Problem 3 definition
     pass
