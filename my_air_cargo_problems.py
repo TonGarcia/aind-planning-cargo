@@ -15,7 +15,6 @@ from functools import lru_cache
 class AirCargoProblem(Problem):
     def __init__(self, cargos, planes, airports, initial: FluentState, goal: list):
         """
-
         :param cargos: list of str
             cargos in the problem
         :param planes: list of str
@@ -56,20 +55,74 @@ class AirCargoProblem(Problem):
 
         def load_actions():
             """Create all concrete Load actions and return a list
-
             :return: list of Action objects
             """
+
+            # Expected: Load(C1(cargo), P1(plane), SFO(airport))
             loads = []
-            # TODO create all load ground actions from the domain Load action
+
+            for cargo in self.cargos:
+                for plane in self.planes:
+                    for airport in self.airports:
+                        # Use this to describe actions in PDDL
+                        # action is an Expr where variables are given as arguments(args)
+                        # Precondition and effect are both lists with positive and negated literals
+                        pre_condition_negative = []
+                        pre_condition_positive = [
+                            expr("At({}, {})".format(cargo, airport)),
+                            expr("At({}, {})".format(plane, airport))
+                        ]
+
+                        # incoming cargo
+                        effect_add = [expr("In({}, {})".format(cargo, plane))]
+                        # outgoing cargo
+                        effect_rem = [expr("At({}, {})".format(cargo, airport))]
+
+                        # Action builder: Load(C2, P2, JFK)
+                        load = Action(
+                            expr("Load({}, {}, {})".format(cargo, plane, airport)),
+                            [pre_condition_positive, pre_condition_negative],
+                            [effect_add, effect_rem]
+                        )
+
+                        # append load action
+                        loads.append(load)
+
+            # DONE: create all load ground actions from the domain Load action
             return loads
 
         def unload_actions():
             """Create all concrete Unload actions and return a list
-
             :return: list of Action objects
             """
             unloads = []
-            # TODO create all Unload ground actions from the domain Unload action
+
+            for cargo in self.cargos:
+                for plane in self.planes:
+                    for airport in self.airports:
+                        # Reverse what is plane At the airport & what cargo is in the plane
+                        pre_condition_negative = []
+                        pre_condition_positive = [
+                            expr("In({}, {})".format(cargo, plane)),
+                            expr("At({}, {})".format(plane, airport))
+                        ]
+
+                        # reverse outgoing cargo
+                        effect_add = [expr("At({}, {})".format(cargo, airport))]
+                        # reverse incoming cargo
+                        effect_rem = [expr("In({}, {})".format(cargo, plane))]
+
+                        # Build the Action the "get out" the cargo, using Unload(C2, P2, JFK)
+                        unload = Action(
+                            expr("Unload({}, {}, {})".format(cargo, plane, airport)),
+                            [pre_condition_positive, pre_condition_negative],
+                            [effect_add, effect_rem]
+                        )
+
+                        # append unload action
+                        unloads.append(unload)
+
+            # DONE: create all Unload ground actions from the domain Unload action
             return unloads
 
         def fly_actions():
