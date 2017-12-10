@@ -47,7 +47,7 @@ class AirCargoProblem(Problem):
             list of Action objects
         """
 
-        # TODO create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
+        # DONE: create concrete Action objects based on the domain action schema for: Load, Unload, and Fly
         # concrete actions definition: specific literal action that does not include variables as with the schema
         # for example, the action schema 'Load(c, p, a)' can represent the concrete actions 'Load(C1, P1, SFO)'
         # or 'Load(C2, P2, JFK)'.  The actions for the planning problem must be concrete because the problems in
@@ -135,8 +135,7 @@ class AirCargoProblem(Problem):
                 for to in self.airports:
                     if fr != to:
                         for p in self.planes:
-                            precond_pos = [expr("At({}, {})".format(p, fr)),
-                                           ]
+                            precond_pos = [expr("At({}, {})".format(p, fr))]
                             precond_neg = []
                             effect_add = [expr("At({}, {})".format(p, to))]
                             effect_rem = [expr("At({}, {})".format(p, fr))]
@@ -156,8 +155,36 @@ class AirCargoProblem(Problem):
             e.g. 'FTTTFF'
         :return: list of Action objects
         """
-        # TODO implement
+
+        #  init KB Prop with the received state
+        kb = PropKB()
+        sentence = decode_state(state, self.state_map).pos_sentence()
+        kb.tell(sentence)
+
+        # search for possible actions
         possible_actions = []
+        for action in self.actions_list:
+
+            # Start saying that any action is possible, it will be tested beyond
+            is_possible_action = True
+
+            # Check if it is really possible
+            for act_pre_condition_neg in action.precond_neg:
+                if act_pre_condition_neg in kb.clauses:
+                    is_possible_action = False
+
+            # if current action still probably possible,
+            # so check if it is not missed at kb.clauses
+            if is_possible_action:
+                for act_pre_condition_pos in action.precond_pos:
+                    if act_pre_condition_pos not in kb.clauses:
+                        is_action_possible = False
+                        break  # No need to keep searching
+
+            # if it still a possible action, so it really is, so add it
+            if is_possible_action: possible_actions.append(action)
+
+        # return only the possible actions
         return possible_actions
 
     def result(self, state: str, action: Action):
@@ -169,8 +196,18 @@ class AirCargoProblem(Problem):
         :param action: Action applied
         :return: resulting state after action
         """
-        # TODO implement
+
+        # init vars
         new_state = FluentState([], [])
+        prev_state = decode_state(state, self.state_map)
+
+        # append the FluentState on it appropriate new_state List
+        for fluent in prev_state.pos: new_state.pos.append(fluent) if fluent not in action.effect_rem else None
+        for fluent in prev_state.neg: new_state.neg.append(fluent) if fluent not in action.effect_add else None
+        for fluent in action.effect_add: new_state.pos.append(fluent) if fluent not in new_state.pos else None
+        for fluent in action.effect_rem: new_state.neg.append(fluent) if fluent not in new_state.neg else None
+
+        # return it encoded new state
         return encode_state(new_state, self.state_map)
 
     def goal_test(self, state: str) -> bool:
