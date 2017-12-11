@@ -171,7 +171,7 @@ class AirCargoProblem(Problem):
             for act_pre_condition_neg in action.precond_neg:
                 if act_pre_condition_neg in kb.clauses:
                     is_possible_action = False
-                    break  # No need to keep searching
+                    break  # Stop Searching
 
             # if current action still probably possible,
             # so check if it is not missed at kb.clauses
@@ -179,7 +179,7 @@ class AirCargoProblem(Problem):
                 for act_pre_condition_pos in action.precond_pos:
                     if act_pre_condition_pos not in kb.clauses:
                         is_possible_action = False
-                        break  # No need to keep searching
+                        break  # Stop Searching
 
             # if it still a possible action, so it really is, so add it
             if is_possible_action: possible_actions.append(action)
