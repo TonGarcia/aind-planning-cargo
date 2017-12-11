@@ -502,5 +502,20 @@ class PlanningGraph():
 
         # For each goal in the problem, determine their level cost incrementing it values
         level_sum = 0
-
+        for goal in self.problem.goal:
+            goal_found = False
+            for level in range(len(self.s_levels)):
+                for state in self.s_levels[level]:
+                    # Create it Symbol as Literal
+                    state_symbol = expr(state.symbol)
+                    # If it state is not positive, add NOT symbol
+                    if not state.is_pos:
+                        state_symbol = expr('~{}'.format(state_symbol))
+                    # Check if it state match with the goal
+                    if goal == state_symbol:
+                        goal_found = True
+                        level_sum += level
+                        break
+                if goal_found:
+                    break
         return level_sum
