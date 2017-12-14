@@ -79,15 +79,20 @@ with table of performances.
 ## Comparing 3 uniformed planning algorithms
 
 - Problem 1:
-    - Best perform: uniform_cost_search & astar_search (tied)
-    - Key metrics comparing to the others algorithms: Both found the same solution which had more than 3x less actions 
-    than the depth first algorithm, all the key metrics was the same for the both tied algorithms;
+    - Best perform: uniform_cost_search & __astar_search__ (tied)
+    - Key metrics comparing to the others algorithms: Both found the same solution which had ~3x less actions 
+    than the depth first algorithm. All the key metrics was the same for the both tied algorithms except the execution 
+    time, astar was a little bit faster than the uniform_cost;
 - Problem 2:
-    - Best perform:
-    - Key metrics comparing to the others algorithms:
+    - Best perform: __uniform_cost_search__ & astar_search (tied)
+    - Key metrics comparing to the others algorithms: Both (best algorithms) found the same solution which had ~68,77x 
+    less actions than the depth first algorithm. All the key metrics was the same for the both tied algorithms except 
+    the execution time, uniform_cost_search was a little bit faster than the astar;
 - Problem 3:
-    - Best perform:
-    - Key metrics comparing to the others algorithms:        
+    - Best perform: __uniform_cost_search__
+    - Key metrics comparing to the others algorithms: The uniform cost & the astar found the best solution which had 
+    ~32,66x less actions than the depth first algorithm, but at this time the uniform_cost performance (execution time)
+    was significantly faster than the astar_search;        
     
 
 ## 2 heuristics used with A* Search
