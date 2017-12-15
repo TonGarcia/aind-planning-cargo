@@ -289,11 +289,14 @@ class PlanningGraph():
                 # Add it reachable action node to the list of action nodes
                 a_nodes.append(node_a)
                 for node_s in self.s_levels[level]:
-                    # 2. connect the nodes to the previous S literal level
-                    # Turn it a reachable action node child of the preceding level's state nodes (node_s)
-                    node_s.children.add(node_a)
-                    # Turn it preceding level's state nodes parents of this reachable action node (node_a)
-                    node_a.parents.add(node_s)
+                    # Efficiency of the planning graph improved by adding the nodes only if the state node lies in the
+                    # pre-nodes of the action node:
+                    if node_s in node_a.prenodes:
+                        # 2. connect the nodes to the previous S literal level
+                        # Turn it a reachable action node child of the preceding level's state nodes (node_s)
+                        node_s.children.add(node_a)
+                        # Turn it preceding level's state nodes parents of this reachable action node (node_a)
+                        node_a.parents.add(node_s)
         # Build the action level from the reachable action nodes
         self.a_levels.append(a_nodes)
 
