@@ -111,6 +111,9 @@ with table of performances.
 | astar                  |    4853    |     57     |    224    |      6      | 0.030243444000007003 |
 | h_levelsum             |     11     |     13     |     50    |      6      | 0.5513160230002541   |
 | h_ignore_preconditions |     41     |     43     |    170    |      6      | 0.030549671000699163 |
+For the Problem1, about the time to take a decision, the A* was the best algorithm, but about the less expansion metric
+the best algorithm was the levelsum. Selecting a "middle term", the best was the ignore_predictions, that found the
+solution using a bit more time than the A* and expanding a bit more, comparing to levelsum.    
 
 ### Problem 2 Table
 | Tables                 | Expansions | Goal Tests | New Nodes | Plan Length | Spent Time (seconds) |
@@ -118,6 +121,8 @@ with table of performances.
 | astar                  |    4853    |    4855    |   44041   |      9      | 11.131236883000383   |
 | h_levelsum             |     86     |     88     |    841    |      9      | 44.135599479999655   |
 | h_ignore_preconditions |    1450    |    1452    |   13303   |      9      | 4.434105365000505    |
+For the Problem2, about the time to take the best decision, the ignore_predictions was the best algorithm, but about the
+one that less expanded, the winner was the levelsum, but it took so long time to find the solution.
 
 ### Problem 3 Table
 | Tables                 | Expansions | Goal Tests | New Nodes | Plan Length | Spent Time (seconds) |
@@ -125,7 +130,11 @@ with table of performances.
 | astar                  |    18223   |    18225   |   159618  |      12     | 49.96127818400055    |
 | h_levelsum             |     325    |     327    |    3002   |      12     | 234.37085508100063   |
 | h_ignore_preconditions |    5040    |    5042    |   44944   |      12     | 18.444490878999204   |
+For the Problem3, about the time to take the best decision, the ignore_predictions was the winner algorithm, but about 
+the one that less expanded, the winner was the levelsum, but it took so long time to find the solution.
 
+As a result is clear that the levelsum use less visits/expansions, but it logics takes so much longer to execute, so it
+is not so efficiently, the ignore_predictions, instead, perform more expansions, but it logic is so "time-cheap".
 
 ## Reason for each result
 The depth first grown up it expansion of nodes exponentially, getting worse for each problem. According to the classes
