@@ -83,7 +83,6 @@ with table of performances.
 
 
 ## Comparing 3 uniformed planning algorithms & A*
-
 - Problem 1:
     - Best perform: __breadth_first__
     - Key metrics comparing to the others algorithms: All algorithms, except the depth first, found the best solution
@@ -102,6 +101,30 @@ with table of performances.
     (less actions), but breadth was the cheapest algorithm (expanded less nodes). The best solution had ~32,66x than the
     depth first algorithm solution. All the key metrics (number of node expansions, goal tests & new nodes) were the
     same for astar & uniform, but uniform_cost_search was a little bit faster;        
+
+
+## Comparing A* with level-sum & ignore-preconditions
+
+### Problem 1 Table
+| Tables                 | Expansions | Goal Tests | New Nodes | Plan Length | Spent Time (seconds) |
+|------------------------|:----------:|-----------:|-----------|-------------|----------------------|
+| astar                  |    4853    |     57     |    224    |      6      | 0.030243444000007003 |
+| h_levelsum             |     11     |     13     |     50    |      6      | 0.5513160230002541   |
+| h_ignore_preconditions |     41     |     43     |    170    |      6      | 0.030549671000699163 |
+
+### Problem 2 Table
+| Tables                 | Expansions | Goal Tests | New Nodes | Plan Length | Spent Time (seconds) |
+|------------------------|:----------:|-----------:|-----------|-------------|----------------------|
+| astar                  |    4853    |    4855    |   44041   |      9      | 11.131236883000383   |
+| h_levelsum             |     86     |     88     |    841    |      9      | 44.135599479999655   |
+| h_ignore_preconditions |    1450    |    1452    |   13303   |      9      | 4.434105365000505    |
+
+### Problem 3 Table
+| Tables                 | Expansions | Goal Tests | New Nodes | Plan Length | Spent Time (seconds) |
+|------------------------|:----------:|-----------:|-----------|-------------|----------------------|
+| astar                  |    18223   |    18225   |   159618  |      12     | 49.96127818400055    |
+| h_levelsum             |     325    |     327    |    3002   |      12     | 234.37085508100063   |
+| h_ignore_preconditions |    5040    |    5042    |   44944   |      12     | 18.444490878999204   |
 
 
 ## Reason for each result
